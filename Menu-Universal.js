@@ -1,6 +1,6 @@
 // ============================================
 // AiCode v2 - Dark Theme (DeepSeek Style)
-// Menu Flutuante Arrastável com Sistema de Toast
+// COMPATÍVEL COM MOBILE + DESKTOP
 // ============================================
 
 (function() {
@@ -11,21 +11,30 @@
         /* ===== TOAST SYSTEM ===== */
         #aiCodeToastContainer {
             position: fixed;
-            top: 80px;
-            right: 20px;
+            top: 70px;
+            right: 12px;
             z-index: 1000000;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            max-width: 360px;
+            gap: 6px;
+            max-width: 280px;
             pointer-events: none;
         }
 
+        @media (min-width: 481px) {
+            #aiCodeToastContainer {
+                top: 80px;
+                right: 20px;
+                max-width: 360px;
+                gap: 8px;
+            }
+        }
+
         .ai-toast {
-            padding: 12px 18px;
+            padding: 10px 14px;
             border-radius: 10px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             color: #E8EDF5;
             background: #1E2532;
@@ -37,21 +46,17 @@
             -webkit-backdrop-filter: blur(10px);
         }
 
-        .ai-toast.success {
-            border-left: 3px solid #4CAF50;
+        @media (min-width: 481px) {
+            .ai-toast {
+                padding: 12px 18px;
+                font-size: 13px;
+            }
         }
 
-        .ai-toast.error {
-            border-left: 3px solid #F44336;
-        }
-
-        .ai-toast.warning {
-            border-left: 3px solid #FFA726;
-        }
-
-        .ai-toast.info {
-            border-left: 3px solid #42A5F5;
-        }
+        .ai-toast.success { border-left: 3px solid #4CAF50; }
+        .ai-toast.error { border-left: 3px solid #F44336; }
+        .ai-toast.warning { border-left: 3px solid #FFA726; }
+        .ai-toast.info { border-left: 3px solid #42A5F5; }
 
         @keyframes toastSlideIn {
             from { opacity: 0; transform: translateX(40px); }
@@ -63,42 +68,70 @@
             to { opacity: 0; transform: translateX(40px); }
         }
 
-        /* ===== CONTAINER PRINCIPAL (DARK THEME) ===== */
+        /* ===== OVERLAY ===== */
+        #aiCodeOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 999998;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #aiCodeOverlay.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        /* ===== CONTAINER PRINCIPAL ===== */
         #aiCodeContainer {
             position: fixed;
-            top: 100px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%) scale(0.92);
             z-index: 999999;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            width: 480px;
+            width: 92vw;
+            max-width: 480px;
+            max-height: 85vh;
             background: #1A1F2B;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-radius: 14px;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 16px;
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            border: 1px solid #2D3548;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             user-select: none;
             display: none;
-            max-height: 80vh;
             overflow: hidden;
-            cursor: default;
-            border: 1px solid #2D3548;
+            opacity: 0;
+            pointer-events: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         #aiCodeContainer.visible {
             display: block;
-            animation: slideDown 0.3s ease;
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
         }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-20px) scale(0.95);
+        @media (max-width: 480px) {
+            #aiCodeContainer {
+                width: 94vw;
+                max-height: 88vh;
+                border-radius: 14px;
+                transform: translate(-50%, -50%) scale(0.9);
             }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0) scale(1);
+            #aiCodeContainer.visible {
+                transform: translate(-50%, -50%) scale(1);
             }
         }
 
@@ -108,48 +141,76 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 32px;
+            height: 40px;
             cursor: grab;
             z-index: 10;
-            border-radius: 14px 14px 0 0;
+            border-radius: 16px 16px 0 0;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: none;
         }
 
         #aiCodeDragHandle:active {
             cursor: grabbing;
         }
 
-        /* ===== BOTÃO TOGGLE (3 PONTINHOS) ===== */
+        @media (max-width: 480px) {
+            #aiCodeDragHandle {
+                height: 44px;
+            }
+        }
+
+        /* ===== BOTAO TOGGLE ===== */
         #aiCodeToggle {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 14px;
+            right: 14px;
             z-index: 999999;
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: #1A1F2B;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid #2D3548;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         #aiCodeToggle:hover {
             transform: scale(1.05);
             border-color: #3D465C;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        #aiCodeToggle:active {
+            transform: scale(0.88);
         }
 
         #aiCodeToggle svg {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             fill: #B0C4DE;
+        }
+
+        @media (min-width: 481px) {
+            #aiCodeToggle {
+                top: 20px;
+                right: 20px;
+                width: 44px;
+                height: 44px;
+            }
+            #aiCodeToggle svg {
+                width: 20px;
+                height: 20px;
+            }
         }
 
         /* ===== HEADER ===== */
@@ -157,21 +218,23 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 18px 12px 18px;
+            padding: 12px 14px 10px 14px;
             background: transparent;
             border-bottom: 1px solid #2D3548;
             position: relative;
             z-index: 5;
+            min-height: 44px;
         }
 
         #aiCodeHeader .mac-dots {
             display: flex;
-            gap: 8px;
+            gap: 6px;
+            flex-shrink: 0;
         }
 
         #aiCodeHeader .mac-dot {
-            width: 13px;
-            height: 13px;
+            width: 11px;
+            height: 11px;
             border-radius: 50%;
             transition: all 0.2s;
         }
@@ -180,49 +243,74 @@
         #aiCodeHeader .mac-dot.yellow { background: #FFBD2E; }
         #aiCodeHeader .mac-dot.green { background: #28C840; }
 
-        #aiCodeHeader .mac-dot:hover {
-            filter: brightness(0.8);
-            transform: scale(0.92);
-        }
-
         #aiCodeHeader .title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             color: #E8EDF5;
             letter-spacing: -0.3px;
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
+            white-space: nowrap;
         }
 
         #aiCodeHeader .spacer {
-            width: 60px;
+            width: 44px;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 481px) {
+            #aiCodeHeader {
+                padding: 14px 18px 12px 18px;
+                min-height: 48px;
+            }
+            #aiCodeHeader .mac-dot {
+                width: 13px;
+                height: 13px;
+                gap: 8px;
+            }
+            #aiCodeHeader .title {
+                font-size: 15px;
+            }
+            #aiCodeHeader .spacer {
+                width: 60px;
+            }
         }
 
         /* ===== TABS ===== */
         #aiCodeTabs {
             display: flex;
-            gap: 4px;
-            padding: 12px 18px 0 18px;
+            gap: 2px;
+            padding: 8px 12px 0 12px;
             border-bottom: 1px solid #2D3548;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        #aiCodeTabs::-webkit-scrollbar {
+            display: none;
         }
 
         #aiCodeTabs .tab {
-            padding: 8px 20px;
+            padding: 6px 14px;
             border-radius: 8px 8px 0 0;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             color: #8892A8;
             transition: all 0.2s;
             border: none;
             background: transparent;
             font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        #aiCodeTabs .tab:hover {
-            color: #E8EDF5;
-            background: rgba(255, 255, 255, 0.04);
+        #aiCodeTabs .tab:active {
+            transform: scale(0.92);
         }
 
         #aiCodeTabs .tab.active {
@@ -242,11 +330,37 @@
             border-radius: 3px 3px 0 0;
         }
 
-        /* ===== CONTEÚDO ===== */
+        @media (min-width: 481px) {
+            #aiCodeTabs {
+                padding: 12px 18px 0 18px;
+                gap: 4px;
+            }
+            #aiCodeTabs .tab {
+                padding: 8px 20px;
+                font-size: 13px;
+            }
+        }
+
+        /* ===== CONTEUDO ===== */
         #aiCodeContent {
-            padding: 18px;
+            padding: 14px;
             overflow-y: auto;
-            max-height: 500px;
+            max-height: calc(85vh - 130px);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (min-width: 481px) {
+            #aiCodeContent {
+                padding: 18px;
+                max-height: 500px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #aiCodeContent {
+                max-height: calc(88vh - 120px);
+                padding: 12px;
+            }
         }
 
         .tab-content {
@@ -277,7 +391,7 @@
         }
 
         .toggle-label {
-            font-size: 14px;
+            font-size: 13px;
             color: #E8EDF5;
             font-weight: 500;
         }
@@ -285,8 +399,17 @@
         .toggle-label small {
             font-weight: 400;
             color: #8892A8;
-            font-size: 12px;
+            font-size: 11px;
             margin-left: 6px;
+        }
+
+        @media (min-width: 481px) {
+            .toggle-label {
+                font-size: 14px;
+            }
+            .toggle-label small {
+                font-size: 12px;
+            }
         }
 
         /* Toggle switch */
@@ -299,6 +422,12 @@
             cursor: pointer;
             transition: all 0.3s;
             flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .toggle-switch:active {
+            transform: scale(0.94);
         }
 
         .toggle-switch.active {
@@ -330,7 +459,7 @@
         .slider-group label {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
+            font-size: 13px;
             color: #E8EDF5;
             font-weight: 500;
             margin-bottom: 8px;
@@ -354,8 +483,8 @@
         .slider-group input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: #42A5F5;
             cursor: pointer;
@@ -363,18 +492,28 @@
         }
 
         .slider-group input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: #42A5F5;
             cursor: pointer;
             border: none;
         }
 
-        /* Botões de ação */
+        @media (min-width: 481px) {
+            .slider-group label {
+                font-size: 14px;
+            }
+            .slider-group input[type="range"]::-webkit-slider-thumb {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        /* Botoes de acao */
         .action-buttons {
             display: none;
-            gap: 10px;
+            gap: 8px;
             margin-top: 12px;
         }
 
@@ -384,7 +523,7 @@
 
         .action-buttons button {
             flex: 1;
-            padding: 8px 16px;
+            padding: 12px 12px;
             border: none;
             border-radius: 8px;
             font-size: 13px;
@@ -392,6 +531,12 @@
             cursor: pointer;
             transition: all 0.2s;
             font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .action-buttons button:active {
+            transform: scale(0.94);
         }
 
         .btn-pause {
@@ -399,16 +544,8 @@
             color: #E8EDF5;
         }
 
-        .btn-pause:hover {
-            background: #E65100;
-        }
-
         .btn-pause.paused {
             background: #2E7D32;
-        }
-
-        .btn-pause.paused:hover {
-            background: #1B5E20;
         }
 
         .btn-cancel {
@@ -416,15 +553,21 @@
             color: #E8EDF5;
         }
 
-        .btn-cancel:hover {
-            background: #B71C1C;
+        @media (min-width: 481px) {
+            .action-buttons {
+                gap: 10px;
+            }
+            .action-buttons button {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
         }
 
         /* ===== EXECUTOR ===== */
         .executor-textarea {
             width: 100%;
-            min-height: 120px;
-            padding: 12px;
+            min-height: 90px;
+            padding: 10px 12px;
             border: 1px solid #2D3548;
             border-radius: 8px;
             font-size: 13px;
@@ -434,6 +577,10 @@
             color: #E8EDF5;
             transition: all 0.2s;
             box-sizing: border-box;
+            -webkit-appearance: none;
+            appearance: none;
+            -webkit-user-select: text;
+            user-select: text;
         }
 
         .executor-textarea:focus {
@@ -447,15 +594,33 @@
             color: #5A6A82;
         }
 
+        @media (min-width: 481px) {
+            .executor-textarea {
+                min-height: 120px;
+                padding: 12px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .executor-textarea {
+                min-height: 70px;
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+
         .executor-buttons {
             display: flex;
-            gap: 8px;
-            margin-top: 12px;
+            gap: 6px;
+            margin-top: 10px;
             flex-wrap: wrap;
         }
 
         .executor-buttons button {
-            padding: 8px 20px;
+            flex: 1;
+            min-width: 60px;
+            padding: 12px 10px;
             border: none;
             border-radius: 8px;
             font-size: 13px;
@@ -463,6 +628,12 @@
             cursor: pointer;
             transition: all 0.2s;
             font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .executor-buttons button:active {
+            transform: scale(0.94);
         }
 
         .btn-execute {
@@ -470,20 +641,9 @@
             color: #E8EDF5;
         }
 
-        .btn-execute:hover {
-            background: #1557B0;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
-        }
-
         .btn-paste {
             background: #2E7D32;
             color: #E8EDF5;
-        }
-
-        .btn-paste:hover {
-            background: #1B5E20;
-            transform: translateY(-1px);
         }
 
         .btn-clear-exec {
@@ -491,26 +651,36 @@
             color: #E8EDF5;
         }
 
-        .btn-clear-exec:hover {
-            background: #B71C1C;
-            transform: translateY(-1px);
+        @media (min-width: 481px) {
+            .executor-buttons {
+                gap: 8px;
+                margin-top: 12px;
+            }
+            .executor-buttons button {
+                padding: 8px 20px;
+                font-size: 13px;
+                min-width: auto;
+            }
         }
 
         /* Output */
         #executorOutput {
-            margin-top: 12px;
+            margin-top: 10px;
             padding: 10px 12px;
             background: #0D1117;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 11px;
             font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
             color: #E8EDF5;
-            max-height: 150px;
+            max-height: 100px;
             overflow-y: auto;
             display: none;
             white-space: pre-wrap;
             word-break: break-all;
             border: 1px solid #2D3548;
+            -webkit-overflow-scrolling: touch;
+            -webkit-user-select: text;
+            user-select: text;
         }
 
         #executorOutput.visible {
@@ -518,10 +688,19 @@
             animation: fadeIn 0.2s ease;
         }
 
-        /* Scrollbar personalizada */
+        @media (min-width: 481px) {
+            #executorOutput {
+                margin-top: 12px;
+                padding: 10px 12px;
+                font-size: 12px;
+                max-height: 150px;
+            }
+        }
+
+        /* Scrollbar */
         #aiCodeContent::-webkit-scrollbar,
         #executorOutput::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
 
         #aiCodeContent::-webkit-scrollbar-track,
@@ -535,18 +714,27 @@
             border-radius: 2px;
         }
 
-        #aiCodeContent::-webkit-scrollbar-thumb:hover,
-        #executorOutput::-webkit-scrollbar-thumb:hover {
-            background: #3D465C;
+        /* ===== PREVENIR ZOOM EM INPUTS ===== */
+        input, textarea, button {
+            font-size: 16px !important;
+        }
+
+        @media (max-width: 480px) {
+            input, textarea, button {
+                font-size: 16px !important;
+            }
         }
     `;
 
     // ========== HTML ==========
     const html = `
+        <!-- Overlay -->
+        <div id="aiCodeOverlay"></div>
+
         <!-- Container de Toast -->
         <div id="aiCodeToastContainer"></div>
 
-        <!-- Botão toggle (3 pontinhos) -->
+        <!-- Botao toggle -->
         <button id="aiCodeToggle" aria-label="Abrir AiCode v2">
             <svg viewBox="0 0 24 24">
                 <circle cx="5" cy="12" r="2.5"/>
@@ -638,6 +826,7 @@
     // ========== REFERENCIAS ==========
     const toggleBtn = document.getElementById('aiCodeToggle');
     const mainContainer = document.getElementById('aiCodeContainer');
+    const overlay = document.getElementById('aiCodeOverlay');
     const dragHandle = document.getElementById('aiCodeDragHandle');
     const tabs = document.querySelectorAll('.tab');
     const tabContents = {
@@ -653,7 +842,6 @@
         toast.textContent = message;
         toastContainer.appendChild(toast);
 
-        // Remove após 3 segundos
         setTimeout(() => {
             if (toast.parentNode) {
                 toast.remove();
@@ -661,14 +849,45 @@
         }, 3000);
     }
 
-    // ========== TOSTS DE EXEMPLO AO ABRIR ==========
     function showExampleToasts() {
-        setTimeout(() => showToast('AiCode v2 carregado com sucesso', 'success'), 300);
-        setTimeout(() => showToast('Sistema de toasts ativo', 'info'), 1200);
-        setTimeout(() => showToast('Arraste o menu pela barra superior', 'warning'), 2100);
+        setTimeout(() => showToast('AiCode v2 carregado', 'success'), 300);
+        setTimeout(() => showToast('Arraste pela barra superior', 'info'), 1200);
+        setTimeout(() => showToast('Toque fora para fechar', 'warning'), 2100);
     }
 
-    // ========== TOGGLES (APENAS MOSTRUARIO) ==========
+    // ========== ABRIR/FECHAR MENU ==========
+    let isMenuVisible = false;
+
+    function toggleMenu(show) {
+        isMenuVisible = (show !== undefined) ? show : !isMenuVisible;
+        
+        mainContainer.classList.toggle('visible', isMenuVisible);
+        overlay.classList.toggle('visible', isMenuVisible);
+        toggleBtn.style.transform = isMenuVisible ? 'rotate(90deg)' : 'rotate(0deg)';
+        document.body.style.overflow = isMenuVisible ? 'hidden' : '';
+        
+        if (isMenuVisible) {
+            showExampleToasts();
+        }
+    }
+
+    toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMenu();
+    });
+
+    overlay.addEventListener('click', function() {
+        toggleMenu(false);
+    });
+
+    // Fechar com ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isMenuVisible) {
+            toggleMenu(false);
+        }
+    });
+
+    // ========== TOGGLES ==========
     const toggles = document.querySelectorAll('.toggle-switch');
     toggles.forEach(toggle => {
         toggle.addEventListener('click', function(e) {
@@ -683,15 +902,15 @@
         });
     });
 
-    // ========== SLIDER DE VELOCIDADE ==========
+    // ========== SLIDER ==========
     const speedSlider = document.getElementById('speedSlider');
     const speedValue = document.getElementById('speedValue');
     speedSlider.addEventListener('input', function() {
         speedValue.textContent = this.value;
-        showToast(`Velocidade ajustada para ${this.value}ms`, 'info');
+        showToast(`Velocidade: ${this.value}ms`, 'info');
     });
 
-    // ========== AUTO DIGITADOR - MOSTRA/ESCONDE BOTOES ==========
+    // ========== AUTO DIGITADOR ==========
     const autoDigitadorToggle = document.querySelector('[data-toggle="autoDigitador"]');
     const actionButtons = document.getElementById('actionButtons');
 
@@ -701,14 +920,14 @@
             const btnPause = document.getElementById('btnPause');
             btnPause.textContent = 'Pausar';
             btnPause.classList.remove('paused');
-            showToast('Auto Digitador ativado - botoes disponiveis', 'success');
+            showToast('Auto Digitador ativado', 'success');
         } else {
             actionButtons.classList.remove('visible');
             showToast('Auto Digitador desativado', 'warning');
         }
     });
 
-    // ========== BOTAO PAUSAR/PLAY ==========
+    // ========== BOTAO PAUSAR ==========
     const btnPause = document.getElementById('btnPause');
     btnPause.addEventListener('click', function() {
         if (this.classList.contains('paused')) {
@@ -744,56 +963,48 @@
                 tabContents[key].classList.toggle('active', key === tabName);
             });
             
-            showToast(`Aba "${this.textContent}" selecionada`, 'info');
+            showToast(`Aba: ${this.textContent}`, 'info');
         });
     });
 
-    // ========== TOGGLE DO MENU ==========
-    let isMenuVisible = false;
-
-    toggleBtn.addEventListener('click', function() {
-        isMenuVisible = !isMenuVisible;
-        mainContainer.classList.toggle('visible', isMenuVisible);
-        this.style.transform = isMenuVisible ? 'rotate(90deg)' : 'rotate(0deg)';
-        
-        if (isMenuVisible) {
-            showExampleToasts();
-        }
-    });
-
-    // ========== FECHAR AO CLICAR FORA ==========
-    document.addEventListener('click', function(event) {
-        if (isMenuVisible && 
-            !mainContainer.contains(event.target) && 
-            !toggleBtn.contains(event.target)) {
-            isMenuVisible = false;
-            mainContainer.classList.remove('visible');
-            toggleBtn.style.transform = 'rotate(0deg)';
-        }
-    });
-
-    // ========== SISTEMA DE DRAG ==========
+    // ========== SISTEMA DE DRAG (MOBILE + DESKTOP) ==========
     let isDragging = false;
     let dragOffsetX = 0;
     let dragOffsetY = 0;
+    let startX = 0;
+    let startY = 0;
 
-    dragHandle.addEventListener('mousedown', function(e) {
-        isDragging = true;
+    function getEventPos(e) {
+        if (e.touches) {
+            return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+        }
+        return { clientX: e.clientX, clientY: e.clientY };
+    }
+
+    function onDragStart(e) {
+        if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea')) {
+            return;
+        }
+        
+        const pos = getEventPos(e);
         const rect = mainContainer.getBoundingClientRect();
-        dragOffsetX = e.clientX - rect.left;
-        dragOffsetY = e.clientY - rect.top;
-        mainContainer.style.cursor = 'grabbing';
+        dragOffsetX = pos.clientX - rect.left;
+        dragOffsetY = pos.clientY - rect.top;
+        startX = rect.left;
+        startY = rect.top;
+        isDragging = true;
         mainContainer.style.transition = 'none';
+        mainContainer.style.cursor = 'grabbing';
         e.preventDefault();
-    });
+    }
 
-    document.addEventListener('mousemove', function(e) {
+    function onDragMove(e) {
         if (!isDragging) return;
         
-        let newX = e.clientX - dragOffsetX;
-        let newY = e.clientY - dragOffsetY;
+        const pos = getEventPos(e);
+        let newX = pos.clientX - dragOffsetX;
+        let newY = pos.clientY - dragOffsetY;
         
-        // Limita na tela
         const rect = mainContainer.getBoundingClientRect();
         const maxX = window.innerWidth - rect.width;
         const maxY = window.innerHeight - rect.height;
@@ -804,15 +1015,26 @@
         mainContainer.style.left = newX + 'px';
         mainContainer.style.top = newY + 'px';
         mainContainer.style.transform = 'none';
-    });
+    }
 
-    document.addEventListener('mouseup', function() {
+    function onDragEnd() {
         if (isDragging) {
             isDragging = false;
             mainContainer.style.cursor = 'default';
             mainContainer.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         }
-    });
+    }
+
+    // Mouse events
+    dragHandle.addEventListener('mousedown', onDragStart);
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
+
+    // Touch events (mobile)
+    dragHandle.addEventListener('touchstart', onDragStart, { passive: false });
+    document.addEventListener('touchmove', onDragMove, { passive: false });
+    document.addEventListener('touchend', onDragEnd);
+    document.addEventListener('touchcancel', onDragEnd);
 
     // ========== EXECUTOR ==========
     const executorInput = document.getElementById('executorInput');
@@ -831,39 +1053,34 @@
                 executorOutput.textContent = 'Script executado com sucesso';
             }
             executorOutput.classList.add('visible');
-            showToast('Script executado com sucesso', 'success');
+            showToast('Script executado', 'success');
         } catch (error) {
             executorOutput.textContent = 'Erro ao executar\n\n' + error.message;
             executorOutput.classList.add('visible');
-            showToast('Erro na execucao: ' + error.message, 'error');
+            showToast('Erro: ' + error.message, 'error');
         }
     }
 
-    // ========== BOTAO EXECUTAR ==========
     document.getElementById('btnExecute').addEventListener('click', function() {
         const code = executorInput.value.trim();
         if (!code) {
             executorOutput.textContent = 'Digite ou cole um script para executar';
             executorOutput.classList.add('visible');
-            showToast('Nenhum script para executar', 'warning');
+            showToast('Nenhum script', 'warning');
             return;
         }
         executeScript(code);
     });
 
-    // ========== BOTAO COLAR (POPUP PROPRIO) ==========
     document.getElementById('btnPaste').addEventListener('click', function() {
         const userInput = prompt('Cole seu script aqui:');
         if (userInput !== null) {
             executorInput.value = userInput;
             executorInput.dispatchEvent(new Event('input'));
-            showToast('Script colado com sucesso', 'success');
-        } else {
-            showToast('Operacao cancelada', 'warning');
+            showToast('Script colado', 'success');
         }
     });
 
-    // ========== BOTAO LIMPAR ==========
     document.getElementById('btnClearExec').addEventListener('click', function() {
         executorInput.value = '';
         executorOutput.textContent = '';
@@ -871,7 +1088,6 @@
         showToast('Campo limpo', 'info');
     });
 
-    // ========== ATALHO: CTRL+ENTER ==========
     executorInput.addEventListener('keydown', function(e) {
         if (e.ctrlKey && e.key === 'Enter') {
             e.preventDefault();
@@ -880,11 +1096,10 @@
     });
 
     // ========== INICIAR ==========
-    console.log('AiCode v2 (Dark Theme) carregado');
-    console.log('Clique nos 3 pontinhos para abrir');
-    console.log('Arraste o menu pela barra superior');
+    console.log('✅ AiCode v2 Mobile carregado!');
+    console.log('📱 Clique nos 3 pontinhos no canto superior direito');
+    console.log('👆 Arraste pela barra superior para mover');
 
-    // Toast inicial
-    setTimeout(() => showToast('AiCode v2 Dark Theme carregado', 'success'), 500);
+    setTimeout(() => showToast('AiCode v2 Mobile carregado', 'success'), 500);
 
 })();
